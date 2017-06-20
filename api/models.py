@@ -7,4 +7,4 @@ class User(AbstractUser):
     photo_url = models.URLField(verbose_name='Photo Url', blank=True)
     full_name = models.CharField(max_length=256, verbose_name='Full name', blank=True)
 
-    REQUIRED_FIELDS = ['password', 'full_name']
+    # REQUIRED_FIELDS = ['password', 'full_name']
