@@ -9,7 +9,7 @@ from rest_framework.decorators import api_view
 from rest_framework.authentication import *
 from rest_framework.authtoken.models import Token
 
-from api.models import User
+from api.models import User, Profile
 from .serializers import UserSerializer
 
 
@@ -61,6 +61,19 @@ class Matches(APIView):
 
 
 class UserView(APIView):
+    def posst(self, request):
+        context = {"code": 100, "token": "05b0e6bc00d03037cea7b0084a5d3aca8fb36a1e",
+                   "message": "Registration successful", "user": {"id": 5,
+                                                                  "password": "pbkdf2_sha256$36000$XoreUgIUj1kc$tXMTUxaKuP05xB+xL9JHdFrZOFRA1RjTKZMkUszAwA4=",
+                                                                  "last_login": None, "is_superuser": False,
+                                                                  "username": "lala", "first_name": "", "last_name": "",
+                                                                  "email": "", "is_staff": False, "is_active": True,
+                                                                  "date_joined": "2017-06-26T13:57:09.999178Z",
+                                                                  "is_verified": False, "photo_url": "",
+                                                                  "full_name": "Akinkuolie Precious", "sex": "Female",
+                                                                  "groups": [], "user_permissions": []}}
+        return JsonResponse(data=context,status=200)
+
     def post(self, request):
         print(request.data)
 
@@ -78,4 +91,19 @@ class UserView(APIView):
             }
             return JsonResponse(data=context, status=200)
 
-        return JsonResponse(status=200, data="OK")
+        user = User.objects.create(username=username, full_name=full_name, sex=sex)
+        user.set_password(password)
+        user.save()
+
+        profile = Profile.objects.create(user=user)
+        profile.save()
+        token = Token.objects.get_or_create(user=user)
+
+        context = {
+            "code": 100,
+            "message": "Registration successful",
+            "user": UserSerializer(user).data,
+            "token": str(token[0])
+        }
+
+        return JsonResponse(status=200, data=context)

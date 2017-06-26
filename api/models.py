@@ -7,7 +7,7 @@ class User(AbstractUser):
     is_verified = models.BooleanField(verbose_name='User Verified', default=False)
     photo_url = models.URLField(verbose_name='Photo Url', blank=True)
     full_name = models.CharField(max_length=256, verbose_name='Full name', blank=True)
-    sex_choices = (('M', "Male"), ("F", "Female"))
+    sex_choices = (('Male', "M"), ("Female", "F"))
     sex = models.CharField(max_length=10, verbose_name='Sex', choices=sex_choices, null=True)
     # REQUIRED_FIELDS = ['password', 'full_name']
 
